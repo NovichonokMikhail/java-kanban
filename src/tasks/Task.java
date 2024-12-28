@@ -1,51 +1,30 @@
 package tasks;
 
 import java.util.Objects;
-import java.util.Scanner;
 
 public class Task {
-    final String name;
-    final String description;
-    final int id;
-    TaskStatus status;
-    final static Scanner scanner = new Scanner(System.in);
+    protected final String name;
+    protected final String description;
+    protected final int id;
+    protected TaskStatus status;
 
-    public Task(String name, String description) {
+    public Task(String name, String description, int id) {
         this.name = name;
         this.description = description;
-        this.id = Objects.hash(name, description);
+        this.id = id;
         status = TaskStatus.NEW;
-    }
-
-    public Task(String name, String description, TaskStatus status) {
-        this.name = name;
-        this.description = description;
-        this.id = Objects.hash(name, description);
-        this.status = status;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public int getId() {
         return id;
     }
 
-    public static Task getTask() {
-        System.out.print("Enter Task name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter Task description: ");
-        String description = scanner.nextLine();
-        return new Task(name, description);
-    }
-
     public TaskStatus getStatus() {
         return status;
+    }
+
+    public void updateStatus() {
+        status = TaskStatus.DONE;
     }
 
     @Override
@@ -65,5 +44,10 @@ public class Task {
                 ", id=" + id +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description);
     }
 }
