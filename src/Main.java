@@ -1,187 +1,66 @@
 import tasks.*;
 
-import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
-        // часто используемые выводы
-        final String UNKNOWN_TYPE_ERROR = "Такого типа не существует.";
-        final String UNKNOWN_ID_ERROR = "Задачи с таким id не существует";
-        final String TYPES_OPTIONS = "1 - Задачи, 2 - Эпики, 3 - Подзадачи";
-
-        // инициализация нужных классов
-        Scanner scanner = new Scanner(System.in);
         TaskManager taskManager = new TaskManager();
 
+        Task task1 = new Task("Task 1", "Test 1");
+        Task task2 = new Task("Task 2", "Test 2");
 
-        // основной цикл
-        while (true) {
-            // переменные для хранения id и тип задачи которые введет пользоватьель
-            int command; // команда
-            int id; // введенное id пользователем
-            int taskType; // введенный тип задачи от пользователя
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
 
-            // вывод меню
-            TaskManager.printMenu();
-            command = scanner.nextInt();
-            switch (command) {
-                case 1:
-                    // вывод всех задач в зависимости от выбранного типа
-                    System.out.println("Вывести все: " + TYPES_OPTIONS);
-                    taskType = scanner.nextInt();
-                    switch (taskType) {
-                        case 1:
-                            taskManager.getAllTasks();
-                            break;
-                        case 2:
-                            taskManager.getAllEpics();
-                            break;
-                        case 3:
-                            taskManager.getAllSubtasks();
-                            break;
-                        default:
-                            System.out.println(UNKNOWN_TYPE_ERROR);
-                    }
-                    break;
-                case 2:
-                    // удаление всех задач в зависимости от типа
-                    System.out.println("Удалить все: " + TYPES_OPTIONS);
-                    taskType = scanner.nextInt();
-                    switch (taskType) {
-                        case 1:
-                            taskManager.deleteAllTasks();
-                            break;
-                        case 2:
-                            taskManager.deleteAllEpics();
-                            break;
-                        case 3:
-                            taskManager.deleteAllSubtasks();
-                            break;
-                        default:
-                            System.out.println(UNKNOWN_TYPE_ERROR);
-                    }
-                    break;
-                case 3:
-                    // получение задачи по id
-                    System.out.print("Введите id: ");
-                    id = scanner.nextInt();
-                    scanner.nextLine();
-                    switch (taskManager.getTaskType(id)) {
-                        case "Task":
-                            taskManager.getTask(id);
-                            break;
-                        case "Epic":
-                            taskManager.getEpic(id);
-                            break;
-                        case "Subtask":
-                            taskManager.getSubtask(id);
-                            break;
-                        default:
-                            System.out.println(UNKNOWN_ID_ERROR);
-                    }
-                    break;
-                case 4:
-                    System.out.println("Какой тип задачи вы хотите создать?");
-                    System.out.println(TYPES_OPTIONS);
-                    taskType = scanner.nextInt();
-                    scanner.nextLine();
+        Epic epic1 = new Epic("Epic 1", "Test 3");
+        Subtask subtask1 = new Subtask("Subtask 1.1", "Test 4", epic1);
+        Subtask subtask2 = new Subtask("Subtask 1.2", "Test 5", epic1);
+        taskManager.createEpic(epic1);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
 
-                    System.out.println("Введите название задачи.");
-                    String name = scanner.nextLine();
-                    System.out.println("Введите описание.");
-                    String description = scanner.nextLine();
-                    switch (taskType) {
-                        case 1:
-                            taskManager.createTask(
-                                    new Task(name, description, taskManager.generateId()
-                                    ));
-                            break;
-                        case 2:
-                            Epic epic = new Epic(name, description, taskManager.generateId());
-                            System.out.println("Из скольки подзадач состоит эпик?");
-                            int subtaskCount = scanner.nextInt();
-                            scanner.nextLine();
-                            for (int i = 0; i < subtaskCount; i++) {
-                                System.out.println("Введите название подзадачи:");
-                                name = scanner.nextLine();
-                                System.out.println("Введите описание подзадачи:");
-                                description = scanner.nextLine();
-                                epic.addTask(new Subtask(
-                                        name
-                                        , description
-                                        , epic
-                                        , taskManager.generateId()
-                                ));
-                            }
-                            taskManager.createEpic(epic);
-                            break;
-                        case 3:
-                            System.out.println("Введите id эпика которму будет принадлежать подзадача:");
-                            id = scanner.nextInt();
-                            scanner.nextLine();
-                            if (taskManager.getEpic(id) != null) {
-                                taskManager.createSubtask(
-                                        new Subtask(name
-                                                , description
-                                                , taskManager.getEpic(id)
-                                                , taskManager.generateId()
-                                        ));
-                            }
-                            break;
-                        default:
-                            System.out.println(UNKNOWN_TYPE_ERROR);
-                    }
-                    break;
-                case 5:
-                    System.out.print("Введите id задачи для обновления: ");
-                    id = scanner.nextInt();
-                    scanner.nextLine();
-                    switch (taskManager.getTaskType(id)) {
-                        case "Task":
-                            taskManager.updateTask(
-                                    taskManager.getTask(id)
-                            );
-                            break;
-                        case "Epic":
-                            System.out.println("Задачи типа эпик обновляются автоматически " +
-                                    "вместе с выполнением их подзадач " +
-                                    "и не могут быть обновлены пользователем");
-                            break;
-                        case "Subtask":
-                            taskManager.updateSubtask(
-                                    taskManager.getSubtask(id)
-                            );
-                            break;
-                        default:
-                            System.out.println(UNKNOWN_ID_ERROR);
-                    }
-                    break;
-                case 6:
-                    System.out.print("Введите id: ");
-                    id = scanner.nextInt();
-                    scanner.nextLine();
-                    switch (taskManager.getTaskType(id)) {
-                        case "Task":
-                            taskManager.deleteTaskById(id);
-                            break;
-                        case "Epic":
-                            taskManager.deleteEpicById(id);
-                            break;
-                        case "Subtask":
-                            taskManager.deleteSubtaskById(id);
-                            break;
-                        default:
-                            System.out.println(UNKNOWN_ID_ERROR);
-                    }
-                    break;
-                case 7:
-                    System.out.println("Работа программы завершена.");
-                    System.out.println("Спасибо за использование!");
-                    return;
-                default:
-                    System.out.println("Такой команды не существует");
-            }
-        }
+        Epic epic2 = new Epic("Epic 2", "Test 6");
+        Subtask subtask3 = new Subtask("Subtask 2", "Test 7", epic2);
+        taskManager.createEpic(epic2);
+        taskManager.createSubtask(subtask3);
+
+        // обновление статуса задачи
+        task1.updateStatus(TaskStatus.DONE);
+        subtask1.updateStatus(TaskStatus.DONE);
+        subtask3.updateStatus(TaskStatus.DONE);
+        taskManager.updateTask(task1);
+        taskManager.updateSubtask(subtask1);
+        taskManager.updateSubtask(subtask3);
+        taskManager.updateEpic(epic2);
+
+        // получение задач по id
+        System.out.println(taskManager.getTask(0));
+        System.out.println(taskManager.getEpic(2));
+        System.out.println(taskManager.getSubtask(4));
+        System.out.println();
+
+        // получение подзадач по id эпика
+        System.out.println(taskManager.getSubtasksByEpicId(5));
+        System.out.println();
+
+        // полуяение задач по типам
+        System.out.println(taskManager.getAllTasks());
+        System.out.println(taskManager.getAllEpics());
+        System.out.println(taskManager.getAllSubtasks());
+        System.out.println();
+
+        // удаление по id
+        taskManager.deleteTaskById(0);
+        taskManager.deleteEpicById(5);
+        taskManager.deleteSubtaskById(3);
+        System.out.println(taskManager.getAllTasks());
+        System.out.println(taskManager.getAllEpics());
+        System.out.println(taskManager.getAllSubtasks());
+
+        // проверка очищения задач
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllEpics(); // с удалением всех эпиков удаляются все подзадачи
+        System.out.println("Количество обычных задач: " + taskManager.getAllTasks().size());
+        System.out.println("Количество эпиков: " + taskManager.getAllEpics().size());
+        System.out.println("Количество подзадач задач: " + taskManager.getAllSubtasks().size());
     }
 }

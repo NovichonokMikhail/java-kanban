@@ -5,13 +5,12 @@ import java.util.Objects;
 public class Task {
     protected final String name;
     protected final String description;
-    protected final int id;
+    protected int id;
     protected TaskStatus status;
 
-    public Task(String name, String description, int id) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.id = id;
         status = TaskStatus.NEW;
     }
 
@@ -19,12 +18,16 @@ public class Task {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public TaskStatus getStatus() {
         return status;
     }
 
-    public void updateStatus() {
-        status = TaskStatus.DONE;
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
     }
 
     @Override
@@ -48,6 +51,6 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description);
+        return id;
     }
 }
