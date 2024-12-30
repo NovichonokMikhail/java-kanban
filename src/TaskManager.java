@@ -3,7 +3,6 @@ import tasks.Task;
 import tasks.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 public class TaskManager {
@@ -24,16 +23,28 @@ public class TaskManager {
     }
 
     // функции для вывода всех задач по типам
-    public Collection<Task> getAllTasks() {
-        return tasks.values();
+    public ArrayList<Task> getAllTasks() {
+        ArrayList<Task> tasksList = new ArrayList<>();
+        for (Task task : tasks.values()) {
+            tasksList.add(task);
+        }
+        return tasksList;
     }
 
-    public Collection<Epic> getAllEpics() {
-        return epics.values();
+    public ArrayList<Epic> getAllEpics() {
+        ArrayList<Epic> epicsList = new ArrayList<>();
+        for (Epic epic : epics.values()) {
+            epicsList.add(epic);
+        }
+        return epicsList;
     }
 
-    public Collection<Subtask> getAllSubtasks() {
-        return subtasks.values();
+    public ArrayList<Subtask> getAllSubtasks() {
+        ArrayList<Subtask> subtaskList = new ArrayList<>();
+        for (Subtask subtask : subtasks.values()) {
+            subtaskList.add(subtask);
+        }
+        return subtaskList;
     }
 
     public ArrayList<Subtask> getSubtasksByEpicId(int id) {
