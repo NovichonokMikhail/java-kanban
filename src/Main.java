@@ -59,6 +59,7 @@ public class Main {
         // проверка очищения задач
         taskManager.deleteAllTasks();
         taskManager.deleteAllEpics(); // с удалением всех эпиков удаляются все подзадачи
+        taskManager.deleteAllSubtasks();
         System.out.println("Количество обычных задач: " + taskManager.getAllTasks().size());
         System.out.println("Количество эпиков: " + taskManager.getAllEpics().size());
         System.out.println("Количество подзадач задач: " + taskManager.getAllSubtasks().size());
