@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Task {
     protected final String name;
     protected final String description;
-    protected int id;
+    protected Integer id;
     protected TaskStatus status;
 
     public Task(String name, String description) {
@@ -14,7 +14,15 @@ public class Task {
         status = TaskStatus.NEW;
     }
 
-    public int getId() {
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Integer getId() {
         return id;
     }
 
