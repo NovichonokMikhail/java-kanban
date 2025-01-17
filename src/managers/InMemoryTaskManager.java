@@ -26,10 +26,12 @@ public class InMemoryTaskManager implements TaskManager {
         id = 0;
     }
 
+    @Override
     public void setHistoryManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
     }
 
+    @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
