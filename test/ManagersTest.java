@@ -1,5 +1,3 @@
-package test;
-
 import managers.Managers;
 import org.junit.jupiter.api.Test;
 
