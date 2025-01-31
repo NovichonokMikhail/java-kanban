@@ -1,14 +1,15 @@
 package tests;
 
-import java.util.List;
-
 import managers.HistoryManager;
 import managers.Managers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 import tasks.Task;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class InMemoryHistoryManagerTest {
     HistoryManager historyManager;
@@ -27,7 +28,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void InMemoryHistoryManagerAddsTasksAndReturnsCorrectHistory() {
+    void inMemoryHistoryManagerAddsTasksAndReturnsCorrectHistory() {
         final List<Task> history = historyManager.getHistory();
 
         assertFalse(history.isEmpty()
@@ -39,7 +40,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void InMemoryHistoryManagerDoesNotContainDuplicates() {
+    void inMemoryHistoryManagerDoesNotContainDuplicates() {
         historyManager.add(mainTask);
         final List<Task> history = historyManager.getHistory();
         final List<Task> correctHistory = List.of(secondaryTask, mainTask);
@@ -51,7 +52,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void InMemoryHistoryManagerCanRemoveVariation1() {
+    void inMemoryHistoryManagerCanRemoveVariation1() {
         historyManager.remove(3);
         final List<Task> history = historyManager.getHistory();
 
@@ -61,7 +62,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void InMemoryHistoryManagerCanRemoveVariation2() {
+    void inMemoryHistoryManagerCanRemoveVariation2() {
         historyManager.remove(9);
         final List<Task> history = historyManager.getHistory();
 

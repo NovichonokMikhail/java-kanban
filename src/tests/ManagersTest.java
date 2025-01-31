@@ -3,17 +3,17 @@ package tests;
 import managers.Managers;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ManagersTest {
 
     @Test
-    void ManagerGetDefaultReturnsNotNull() {
+    void managerGetDefaultReturnsNotNull() {
         assertNotNull(Managers.getDefault());
     }
 
     @Test
-    void ManagersGetDefaultReturnNotNull() {
+    void managersGetDefaultReturnNotNull() {
         assertNotNull(Managers.getDefaultHistory());
     }
 }

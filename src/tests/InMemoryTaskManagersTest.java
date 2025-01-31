@@ -4,13 +4,16 @@ import managers.Managers;
 import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tasks.*;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 import util.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class InMemoryTaskManagersTest {
 
@@ -23,7 +26,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void SubtasksCanBeDeletedByIdAndAllOfThemCanBeCleared() {
+    void subtasksCanBeDeletedByIdAndAllOfThemCanBeCleared() {
         Epic epic = new Epic("epic", "none");
         for (int i = 0; i < 5; i++) {
             new Subtask(String.format("Subtask 1.#%d", i), "None", epic);
@@ -49,7 +52,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void EpicsCanBeDeletedByIdAndAllOfThemCanBeCleared() {
+    void epicsCanBeDeletedByIdAndAllOfThemCanBeCleared() {
         Epic epic = new Epic("epic", "none");
         for (int i = 0; i < 2; i++) {
             new Subtask(String.format("Subtask 1.#%d", i), "None", epic);
@@ -80,7 +83,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void TasksCanBeDeletedByIdAndAllOfThemCanBeCleared() {
+    void tasksCanBeDeletedByIdAndAllOfThemCanBeCleared() {
         for (int i = 0; i < 5; i++) {
             manager.createTask(new Task(String.format("Task #%d", i), "None"));
         }
@@ -93,7 +96,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void EpicStatusIsUpdatedCorrectly() {
+    void epicStatusIsUpdatedCorrectly() {
         Epic epic = new Epic("Epic", "Test epic");
         Subtask subtask1 = new Subtask("Subtask 1", "1.1", epic);
         Subtask subtask2 = new Subtask("Subtask 2", "1.2", epic);
@@ -151,7 +154,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void HistoryCantContainDuplicates() {
+    void historyCantContainDuplicates() {
         Task task = new Task("Task 1", "test task");
         Task extraTask = new Task("Task 2", "additional task");
 
@@ -169,10 +172,8 @@ class InMemoryTaskManagersTest {
         assertEquals(correctHistory, history);
     }
 
-
-
     @Test
-    void InMemoryTaskManagerDonTConflictWithTasksWithCustomId() {
+    void inMemoryTaskManagerDonTConflictWithTasksWithCustomId() {
         Task task = new Task("Regular Task", "Task");
         manager.createTask(task);
         Task task2 = new Task("Regular Task 2", "Task 2");
@@ -184,7 +185,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void InMemoryTaskManagerAdjustsIdWhenEncountersTasksWithCustomId() {
+    void inMemoryTaskManagerAdjustsIdWhenEncountersTasksWithCustomId() {
         Task task = new Task("Regular Task 1", "Task 1");
         task.setId(1);
         manager.createTask(task);
@@ -199,7 +200,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void InMemoryTaskManagerDoesNotChangeDataAfterAddingTask() {
+    void inMemoryTaskManagerDoesNotChangeDataAfterAddingTask() {
         Task task = new Task("Task", "Original task");
         manager.createTask(task);
 
@@ -210,7 +211,7 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void HistoryManagerContainsPreviousVersionOfATaskAndData() {
+    void historyManagerContainsPreviousVersionOfATaskAndData() {
         Task task = new Task("Go shopping", "buy milk");
         manager.createTask(task);
         manager.getTask(0);

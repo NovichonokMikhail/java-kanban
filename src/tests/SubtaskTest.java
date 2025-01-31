@@ -3,11 +3,12 @@ package tests;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SubtaskTest {
     @Test
-    void TwoSubtasksWithEqualIdAreEqual() {
+    void twoSubtasksWithEqualIdAreEqual() {
         Epic epic = new Epic("Epic 1", "Epic Test");
         Subtask subtask = new Subtask("Task 1", "1", epic);
         subtask.setId(0);
@@ -17,7 +18,7 @@ class SubtaskTest {
     }
 
     @Test
-    void RelatedEpicIsStoredCorrectly() {
+    void relatedEpicIsStoredCorrectly() {
         Epic epic = new Epic("Epic 1", "Epic Test");
         Subtask subtask = new Subtask("Task 1", "1", epic);
         assertEquals(epic, subtask.getRelatedEpic());
