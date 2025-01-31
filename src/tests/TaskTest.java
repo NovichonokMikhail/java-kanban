@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import tasks.Task;
 
 import org.junit.jupiter.api.Test;
-import tasks.TaskStatus;
+import util.TaskStatus;
 
 import static org.junit.jupiter.api.Assertions.*;
 

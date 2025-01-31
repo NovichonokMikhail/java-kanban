@@ -5,6 +5,7 @@ import managers.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.*;
+import util.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,15 +151,25 @@ class InMemoryTaskManagersTest {
     }
 
     @Test
-    void HistoryTracksOnlyLast10Tasks() {
-        for (int i = 1; i <= 11; i++) {
-            Task task = new Task(String.format("Task #%d", i), "test regular task");
-            manager.createTask(task);
-            manager.getTask(i - 1);
-        }
+    void HistoryCantContainDuplicates() {
+        Task task = new Task("Task 1", "test task");
+        Task extraTask = new Task("Task 2", "additional task");
+
+        manager.createTask(task);
+        manager.createTask(extraTask);
+
+        manager.getTask(0);
+        manager.getTask(1);
+        manager.getTask(0);
+
         final List<Task> history = manager.getHistory();
-        assertEquals(history.size(), 10, "в истории количество задач превышающее максимум");
+        final List<Task> correctHistory = List.of(extraTask, task);
+
+        assertEquals(2, history.size(), "содержатся дубликаты задач");
+        assertEquals(correctHistory, history);
     }
+
+
 
     @Test
     void InMemoryTaskManagerDonTConflictWithTasksWithCustomId() {
@@ -206,7 +217,7 @@ class InMemoryTaskManagersTest {
         task.updateStatus(TaskStatus.DONE);
         manager.updateTask(task);
 
-        final Task previousTaskVersion = manager.getHistory().get(0);
+        final Task previousTaskVersion = manager.getHistory().getFirst();
 
         assertEquals(previousTaskVersion, manager.getTask(0), "обновленная версия совпадает со старой");
     }
