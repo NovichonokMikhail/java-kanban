@@ -101,34 +101,34 @@ class InMemoryTaskManagersTest {
         Subtask subtask1 = new Subtask("Subtask 1", "1.1", epic);
         Subtask subtask2 = new Subtask("Subtask 2", "1.2", epic);
         manager.createEpic(epic);
-        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.NEW
-                , "не корректный статус при создании эпика");
+        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.NEW,
+                "не корректный статус при создании эпика");
 
         subtask1.updateStatus(TaskStatus.DONE);
         manager.updateSubtask(subtask1);
-        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.IN_PROGRESS
-                , "не корректный статус при обновление одной из подзадач");
+        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.IN_PROGRESS,
+                "не корректный статус при обновление одной из подзадач");
 
         manager.deleteSubtaskById(1);
-        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.NEW
-                , "Статус не обновился до правильного при удалении одной из подзадач");
-        assertEquals(manager.getEpic(0).getSubtasks().size(), 1
-                , "Задача не была удалена из эпика");
+        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.NEW,
+                "Статус не обновился до правильного при удалении одной из подзадач");
+        assertEquals(manager.getEpic(0).getSubtasks().size(), 1,
+                "Задача не была удалена из эпика");
 
         subtask2.updateStatus(TaskStatus.DONE);
         manager.updateSubtask(subtask2);
-        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.DONE
-                , "статус эпика не корректен при завершении всех задач");
+        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.DONE,
+                "статус эпика не корректен при завершении всех задач");
 
         Subtask subtask3 = new Subtask("Subtask 3", "1.3", epic);
         manager.createSubtask(subtask3);
-        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.IN_PROGRESS
-                , "статус эпика не обнавлен при добавлении новой задачи");
+        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.IN_PROGRESS,
+                "статус эпика не обнавлен при добавлении новой задачи");
 
         subtask3.updateStatus(TaskStatus.DONE);
         manager.updateSubtask(subtask3);
-        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.DONE
-                , "статус эпика не корректен при завершении всех задач");
+        assertEquals(manager.getEpic(0).getStatus(), TaskStatus.DONE,
+                "статус эпика не корректен при завершении всех задач");
     }
 
     @Test
@@ -204,10 +204,10 @@ class InMemoryTaskManagersTest {
         Task task = new Task("Task", "Original task");
         manager.createTask(task);
 
-        assertEquals(task.getName(), manager.getTask(0).getName()
-                , "названия не совпадают");
-        assertEquals(task.getDescription(), manager.getTask(0).getDescription()
-                , "описания не совпадают");
+        assertEquals(task.getName(), manager.getTask(0).getName(),
+                "названия не совпадают");
+        assertEquals(task.getDescription(), manager.getTask(0).getDescription(),
+                "описания не совпадают");
     }
 
     @Test

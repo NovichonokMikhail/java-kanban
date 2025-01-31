@@ -31,11 +31,11 @@ class InMemoryHistoryManagerTest {
     void inMemoryHistoryManagerAddsTasksAndReturnsCorrectHistory() {
         final List<Task> history = historyManager.getHistory();
 
-        assertFalse(history.isEmpty()
-                , "После добавления задачи, история не должна быть пустой.");
+        assertFalse(history.isEmpty(),
+                "После добавления задачи, история не должна быть пустой.");
 
-        assertEquals(2, history.size()
-                , "После добавления 2 задач, размер должен быть 2.");
+        assertEquals(2, history.size(),
+                "После добавления 2 задач, размер должен быть 2.");
         assertEquals(history.getFirst(), mainTask, "Задача совпадает с изначальной копией");
     }
 
@@ -45,8 +45,8 @@ class InMemoryHistoryManagerTest {
         final List<Task> history = historyManager.getHistory();
         final List<Task> correctHistory = List.of(secondaryTask, mainTask);
 
-        assertEquals(2, history.size()
-                , "история содержит дубликаты.");
+        assertEquals(2, history.size(),
+                "история содержит дубликаты.");
         assertEquals(history.getFirst(), secondaryTask, "Задача совпадает с изначальной копией");
         assertEquals(correctHistory, history, "некоректный порядок хранения задач");
     }
@@ -56,8 +56,8 @@ class InMemoryHistoryManagerTest {
         historyManager.remove(3);
         final List<Task> history = historyManager.getHistory();
 
-        assertEquals(1, history.size()
-                , "задача не удалилась из истории");
+        assertEquals(1, history.size(),
+                "задача не удалилась из истории");
         assertEquals(history.getFirst(), mainTask, "Задача совпадает с изначальной копией");
     }
 
@@ -66,8 +66,8 @@ class InMemoryHistoryManagerTest {
         historyManager.remove(9);
         final List<Task> history = historyManager.getHistory();
 
-        assertEquals(1, history.size()
-                , "задача не удалилась из истории");
+        assertEquals(1, history.size(),
+                "задача не удалилась из истории");
         assertEquals(history.getFirst(), secondaryTask, "Задача совпадает с изначальной копией");
     }
 }
