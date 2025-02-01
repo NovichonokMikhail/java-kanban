@@ -1,5 +1,3 @@
-package tests;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -7,7 +5,7 @@ import tasks.Subtask;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
     Epic epic;
@@ -18,15 +16,15 @@ class EpicTest {
     }
 
     @Test
-    void TwoEpicsWithEqualIdAreEqual() {
+    void twoEpicsWithEqualIdAreEqual() {
         epic.setId(3);
-        Epic extraEpic = new Epic ("task 2", "second epic task");
+        Epic extraEpic = new Epic("task 2", "second epic task");
         extraEpic.setId(3);
         assertEquals(epic, extraEpic);
     }
 
     @Test
-    void MethodGetSubtasksReturnCorrectListOfSubtasks() {
+    void methodGetSubtasksReturnCorrectListOfSubtasks() {
         ArrayList<Subtask> correctList = new ArrayList<>(5);
         for (int i = 0; i < 5; i++) {
             Subtask subtask = new Subtask(String.format("Subtask #%d", i), "none", epic);

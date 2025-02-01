@@ -1,12 +1,9 @@
-package tests;
-
 import org.junit.jupiter.api.BeforeEach;
-import tasks.Task;
-
 import org.junit.jupiter.api.Test;
-import tasks.TaskStatus;
+import tasks.Task;
+import util.TaskStatus;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TaskTest {
     Task task;
@@ -17,7 +14,7 @@ class TaskTest {
     }
 
     @Test
-    void TwoTasksWithEqualIdAreEqual() {
+    void twoTasksWithEqualIdAreEqual() {
         Task task = new Task("Task 1", "1");
         task.setId(0);
         Task extraTask = new Task("Task 2", "2");
@@ -26,7 +23,7 @@ class TaskTest {
     }
 
     @Test
-    void TaskStatusIsUpdatedCorrectly() {
+    void taskStatusIsUpdatedCorrectly() {
         assertEquals(task.getStatus(), TaskStatus.NEW);
 
         task.updateStatus(TaskStatus.IN_PROGRESS);
@@ -37,7 +34,7 @@ class TaskTest {
     }
 
     @Test
-    void CustomIdCanBeSet() {
+    void customIdCanBeSet() {
         task.setId(8);
         assertEquals(task.getId(), 8);
         task.setId(4);

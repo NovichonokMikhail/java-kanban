@@ -1,6 +1,7 @@
 package tasks;
 
 import java.util.Objects;
+import util.TaskStatus;
 
 public class Task {
     protected final String name;
