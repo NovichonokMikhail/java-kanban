@@ -66,8 +66,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() throws ManagerSaveException {
         List<HashMap<Integer, ? extends Task>> tasksList = List.of(tasks, epics, subtasks);
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
-            String FILE_FIRST_LINE = "id,type,name,status,description,epic\n";
-            writer.write(FILE_FIRST_LINE);
+            String firstLine = "id,type,name,status,description,epic\n";
+            writer.write(firstLine);
             for (HashMap<Integer, ? extends Task> map : tasksList) {
                 for (Task task : map.values()) {
                     String stringTask = toString(task);
@@ -96,12 +96,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private static String toString(Task task) {
         final String FORMAT = "%d,%S,%s,%S,%s,%s\n";
         if (task.getType() != TaskType.SUBTASK) {
-            return String.format(FORMAT, task.getId(), task.getType(), task.getName()
-                    , task.getStatus(), task.getDescription(), "");
+            return String.format(FORMAT, task.getId(), task.getType(), task.getName(),
+                    task.getStatus(), task.getDescription(), "");
         }
         Subtask subtask = (Subtask) task;
-        return String.format(FORMAT, subtask.getId(), subtask.getType(), subtask.getName()
-                , subtask.getStatus(), subtask.getDescription(), subtask.getRelatedEpic().getId());
+        return String.format(FORMAT, subtask.getId(), subtask.getType(), subtask.getName(),
+                subtask.getStatus(), subtask.getDescription(), subtask.getRelatedEpic().getId());
     }
 
     private static void fromString(String str, FileBackedTaskManager manager) {
