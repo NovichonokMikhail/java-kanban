@@ -13,7 +13,6 @@ import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
-    private final String FILE_FIRST_LINE = "id,type,name,status,description,epic\n";
 
     /**
      * Дефолтный конструктор
@@ -67,6 +66,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private void save() throws ManagerSaveException {
         List<HashMap<Integer, ? extends Task>> tasksList = List.of(tasks, epics, subtasks);
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+            String FILE_FIRST_LINE = "id,type,name,status,description,epic\n";
             writer.write(FILE_FIRST_LINE);
             for (HashMap<Integer, ? extends Task> map : tasksList) {
                 for (Task task : map.values()) {

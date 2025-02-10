@@ -24,7 +24,6 @@ public class Subtask extends Task {
      * @param description описание
      * @param status статус
      * @param id номер задачи
-     * @param relatedEpicId id эпика к которому принадлежит задача
      */
     public Subtask(String name, String description, TaskStatus status, int id, Epic relatedEpic) {
         super(name, description, status, id);

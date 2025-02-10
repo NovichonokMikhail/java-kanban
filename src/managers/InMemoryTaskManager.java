@@ -32,7 +32,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     /**
      * Сеттер для менеджера истории
-     * @param historyManager менеджер истории который реализует интерфейс {@code: HistoryManager}
+     * @param historyManager менеджер истории который реализует интерфейс {@code HistoryManager}
      */
     @Override
     public void setHistoryManager(HistoryManager historyManager) {
