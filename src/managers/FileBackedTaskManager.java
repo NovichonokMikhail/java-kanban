@@ -1,5 +1,6 @@
 package managers;
 
+import exceptions.ManagerSaveException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -31,6 +32,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         setHistoryManager(new InMemoryHistoryManager());
         this.file = file;
+    }
+
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
+            reader.readLine();
+            while (reader.ready()) {
+                String line = reader.readLine();
+                fromString(line, manager);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла");
+        }
+        return manager;
     }
 
     @Override
@@ -79,20 +94,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            reader.readLine();
-            while (reader.ready()) {
-                String line = reader.readLine();
-                fromString(line, manager);
-            }
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения файла");
-        }
-        return manager;
-    }
-
     private static String toString(Task task) {
         final String FORMAT = "%d,%S,%s,%S,%s,%s\n";
         if (task.getType() != TaskType.SUBTASK) {
@@ -117,12 +118,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case TASK -> manager.createTask(new Task(name, description, status, id));
             case EPIC -> manager.createEpic(new Epic(name, description, id));
             case SUBTASK -> manager.createSubtask(new Subtask(name, description, status, id, manager.getEpic(epicId)));
-        }
-    }
-
-    static class ManagerSaveException extends Exception {
-        ManagerSaveException(String message) {
-            super(message);
         }
     }
 }
