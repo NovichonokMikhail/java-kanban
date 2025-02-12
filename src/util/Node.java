@@ -1,5 +1,9 @@
 package util;
 
+/**
+ * Вспомогательный класс
+ * @param <E>
+ */
 public class Node<E> {
     public E data;
     public Node<E> next;

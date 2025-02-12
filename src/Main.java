@@ -1,58 +1,33 @@
-import managers.*;
-import tasks.*;
+import managers.FileBackedTaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import util.TaskStatus;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // создаем менеджер
-        TaskManager manager = Managers.getDefault();
-        // ставим менеджер для истории запросов
-        manager.setHistoryManager(Managers.getDefaultHistory());
 
-        // создаю 2 обычные задачи
-        Task task1 = new Task("Task 1", "regular task");
-        manager.createTask(task1);
-        Task task2 = new Task("Task 2", "regular task");
-        manager.createTask(task2);
+        File tempFile = File.createTempFile("/java-kanban/", "temp.csv");
+        FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
+        Task testTask = new Task("Task 1", "task example");
+        testTask.updateStatus(TaskStatus.DONE);
+        manager.createTask(testTask);
 
-        // создаю эпик
-        Epic epic1 = new Epic("Epic 1", "filled epic");
-        for (int i = 1; i < 4; i++) {
-            // заполняю эпик подзадачами
-            new Subtask(String.format("Subtask 1.%d", i), "empty", epic1);
-        }
-        manager.createEpic(epic1);
+        Epic testEpic = new Epic("Epic 2", "epic example");
+        manager.createEpic(testEpic);
 
-        // создаю второй эпик который оставлю пустым
-        Epic epic2 = new Epic("Epic 2", "empty epic");
-        manager.createEpic(epic2);
+        Subtask testSubtask1 = new Subtask("Subtask 1", "subtask example 1", testEpic);
+        manager.createSubtask(testSubtask1);
+        Subtask testSubtask2 = new Subtask("Subtask 2", "subtask example 2", testEpic);
+        manager.createSubtask(testSubtask2);
 
-
-        // Тестовый сценарий
-        manager.getTask(0);
-        System.out.println(manager.getHistory());
-
-        manager.getSubtask(4);
-        System.out.println(manager.getHistory());
-
-        manager.getSubtask(5);
-        System.out.println(manager.getHistory());
-
-        manager.getTask(0);
-        System.out.println(manager.getHistory());
-
-        manager.deleteSubtaskById(4);
-        System.out.println(manager.getHistory());
-
-        manager.getEpic(6);
-        System.out.println(manager.getHistory());
-
-        manager.getEpic(2);
-        System.out.println(manager.getHistory());
-
-        manager.deleteEpicById(2);
-        System.out.println(manager.getHistory());
-
-        manager.deleteEpicById(6);
-        System.out.println(manager.getHistory());
+        manager = FileBackedTaskManager.loadFromFile(tempFile);
+        System.out.println(manager.getAllTasks());
+        System.out.println(manager.getAllEpics());
+        System.out.println(manager.getAllSubtasks());
     }
 }
