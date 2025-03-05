@@ -3,19 +3,31 @@ package tasks;
 import util.TaskStatus;
 import util.TaskType;
 
+import java.time.LocalDateTime;
+
 public class Subtask extends Task {
     private final Epic relatedEpic;
 
     /**
-     * Дефолтный конструктор
+     * Дефолтный конструктор без даты
      * @param name название
      * @param description описание
      * @param relatedEpic эпик которму принадлежит этот сабтаск
      */
     public Subtask(String name, String description, Epic relatedEpic) {
-        super(name, description);
-        this.relatedEpic = relatedEpic;
-        relatedEpic.addTask(this);
+        this(name, description, TaskStatus.NEW, null, relatedEpic, 0L, null);
+    }
+
+    /**
+     * Дефолтный конструктор с датой начала задания
+     * @param name название
+     * @param description описание
+     * @param relatedEpic эпик которму принадлежит этот сабтаск
+     * @param duration время выделенное на выполнение задачи в минутах
+     * @param startTime дата и время начала задачи
+     */
+    public Subtask(String name, String description, Epic relatedEpic, Long duration, LocalDateTime startTime) {
+        this(name, description, TaskStatus.NEW, null, relatedEpic, duration, startTime);
     }
 
     /**
@@ -24,9 +36,17 @@ public class Subtask extends Task {
      * @param description описание
      * @param status статус
      * @param id номер задачи
+     * @param duration время выделенное на выполнение задачи в минутах
+     * @param startTime дата и время начала задачи
      */
-    public Subtask(String name, String description, TaskStatus status, int id, Epic relatedEpic) {
-        super(name, description, status, id);
+    public Subtask(String name,
+                   String description,
+                   TaskStatus status,
+                   Integer id,
+                   Epic relatedEpic,
+                   Long duration,
+                   LocalDateTime startTime) {
+        super(name, description, status, id, duration, startTime);
         this.relatedEpic = relatedEpic;
         relatedEpic.addTask(this);
     }
@@ -63,5 +83,13 @@ public class Subtask extends Task {
                 ", relatedEpic=" + relatedEpic +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean intersectsTask(Task task) {
+        if (task instanceof Epic e) {
+            if (e.equals(relatedEpic)) return false;
+        }
+        return super.intersectsTask(task);
     }
 }

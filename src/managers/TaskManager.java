@@ -1,6 +1,8 @@
 package managers;
 
-import tasks.*;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ public interface TaskManager {
     ArrayList<Subtask> getAllSubtasks();
 
     ArrayList<Subtask> getSubtasksByEpicId(int id);
+
+    List<Task> getPrioritizedTasks();
 
     void deleteAllTasks();
 

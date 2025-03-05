@@ -3,6 +3,8 @@ package tasks;
 import util.TaskStatus;
 import util.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -10,16 +12,28 @@ public class Task {
     protected final String description;
     protected Integer id;
     protected TaskStatus status;
+    protected LocalDateTime startTime;
+    protected LocalDateTime endTime;
+    protected Duration duration;
 
     /**
-     * Дефолтный конструктор
+     * Дефолтный конструктор без даты и времени
      * @param name название
      * @param description описание
      */
     public Task(String name, String description) {
-        this.name = name;
-        this.description = description;
-        status = TaskStatus.NEW;
+        this(name, description, TaskStatus.NEW, null, 0L, null);
+    }
+
+    /**
+     * Дефолтный конструктор с указанием даты
+     * @param name название
+     * @param description описание
+     * @param duration длительность в минутах
+     * @param startTime начало задачи
+     */
+    public Task(String name, String description, Long duration, LocalDateTime startTime) {
+        this(name, description, TaskStatus.NEW, null, duration, startTime);
     }
 
     /**
@@ -28,12 +42,17 @@ public class Task {
      * @param description описание
      * @param status статус
      * @param id номер задачи
+     * @param duration - длительность в минутах
+     * @param startTime - начало задачи
      */
-    public Task(String name, String description, TaskStatus status, int id) {
+    public Task(String name, String description, TaskStatus status, Integer id, Long duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.id = id;
+        this.duration = (duration != null) ? Duration.ofMinutes(duration) : Duration.ofMinutes(0L);
+        this.startTime = startTime;
+        if (startTime != null) endTime = startTime.plus(this.duration);
     }
 
     /**
@@ -84,6 +103,18 @@ public class Task {
         return status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
     /**
      * Сеттер статуса задачи
      * @param status новый статус
@@ -114,5 +145,13 @@ public class Task {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public boolean intersectsTask(Task task) {
+        if (task.startTime != null && startTime != null) {
+            return (startTime.isAfter(task.startTime) && startTime.isBefore(task.endTime)) ||
+                    (endTime.isAfter(task.startTime));
+        }
+        return false;
     }
 }
