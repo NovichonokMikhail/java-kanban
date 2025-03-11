@@ -1,9 +1,14 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
+import tasks.Subtask;
 import tasks.Task;
 import util.TaskStatus;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TaskTest {
     Task task;
@@ -39,5 +44,18 @@ class TaskTest {
         assertEquals(task.getId(), 8);
         task.setId(4);
         assertEquals(task.getId(), 4);
+    }
+
+    @Test
+    void taskIndicatesIntersections() {
+        task = new Task(task.getName(), task.getDescription(), 30L, LocalDateTime.now());
+        Task anotherTask = new Task("task", "extra", 15L, LocalDateTime.now());
+        assertTrue(task.intersectsTask(anotherTask), "ошибка в проверке таска");
+
+        Epic anotherEpic = new Epic("epic", "extra");
+        Subtask anotherSubtask = new Subtask("subtask", "extra",
+                anotherEpic, 15L, LocalDateTime.now());
+        assertTrue(task.intersectsTask(anotherEpic), "ошибка в проверке эпика");
+        assertTrue(task.intersectsTask(anotherSubtask), "ошибка в проверке сабтаска");
     }
 }

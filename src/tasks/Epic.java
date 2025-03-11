@@ -3,29 +3,30 @@ package tasks;
 import util.TaskStatus;
 import util.TaskType;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
     private final ArrayList<Subtask> subtasks;
 
     /**
-     * Дефолтный конструктор
+     * Дефолтный конструктор без даты начала
      * @param name название задачи
      * @param description описание
      */
     public Epic(String name, String description) {
-        super(name, description);
-        subtasks = new ArrayList<>();
+        this(name, description, null, 0L, null);
     }
 
     /**
-     * Конструктор с указанием id для упрощения возсоздание эпика из файла
+     * Конструктор для выгрузки из файла
      * @param name название задачи
      * @param description описание
      * @param id id задачи
      */
-    public Epic(String name, String description, int id) {
-        super(name, description, TaskStatus.NEW, id);
+    public Epic(String name, String description, Integer id, Long duration, LocalDateTime startTime) {
+        super(name, description, TaskStatus.NEW, id, duration, startTime);
         subtasks = new ArrayList<>();
     }
 
@@ -34,8 +35,12 @@ public class Epic extends Task {
      * @param subtask сабтаск для удаления
      */
     public void removeSubtask(Subtask subtask) {
-        subtasks.remove(subtask);
-        updateStatus();
+        if (subtasks.contains(subtask)) {
+            subtasks.remove(subtask);
+            updateStatus();
+            updateStartAndEndTimes();
+            duration.minus(subtask.getDuration());
+        }
     }
 
     /**
@@ -50,24 +55,22 @@ public class Epic extends Task {
      * Функция для обновления статуса эпика
      */
     public void updateStatus() {
-        boolean allTasksDone = true;
-        boolean allTasksNotDone = true;
-
-        for (Subtask subtask : subtasks) {
-            if (subtask.getStatus() != TaskStatus.DONE) {
-                allTasksDone = false;
-            } else if (subtask.getStatus() != TaskStatus.NEW) {
-                allTasksNotDone = false;
-            }
-        }
-
-        if (allTasksDone && !allTasksNotDone) { // !allTasksNotDone на случай если эпик будет пустым
-            status = TaskStatus.DONE;
-        } else if (allTasksNotDone) {
+        if (subtasks.isEmpty()) {
             status = TaskStatus.NEW;
-        } else {
-            status = TaskStatus.IN_PROGRESS;
+            return;
         }
+
+        int tasksDone = subtasks.stream()
+                .filter(s -> s.status == TaskStatus.DONE)
+                .toList().size();
+
+        int tasksInProgress = subtasks.stream()
+                .filter(s -> s.status == TaskStatus.IN_PROGRESS)
+                .toList().size();
+
+        if (tasksDone == subtasks.size()) status = TaskStatus.DONE;
+        else if (tasksDone > 0 || tasksInProgress > 0) status = TaskStatus.IN_PROGRESS;
+        else status = TaskStatus.NEW;
     }
 
     /**
@@ -77,6 +80,8 @@ public class Epic extends Task {
     public void addTask(Subtask subtask) {
         subtasks.add(subtask);
         updateStatus();
+        duration.plus(subtask.getDuration());
+        updateStartAndEndTimes();
     }
 
     /**
@@ -97,5 +102,30 @@ public class Epic extends Task {
                 ", subtasks=" + subtasks.size() +
                 ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean intersectsTask(Task task) {
+        if (task instanceof Subtask) {
+            if (subtasks.contains((Subtask) task)) return false;
+        }
+        return super.intersectsTask(task);
+    }
+
+    private void updateStartAndEndTimes() {
+        List<Subtask> nonEmptyTimes = subtasks.stream().filter(s -> s.startTime != null).toList();
+        if (nonEmptyTimes.isEmpty()) {
+            startTime = null;
+            endTime = null;
+        } else if (nonEmptyTimes.size() == 1) {
+            Subtask s = subtasks.getFirst();
+            startTime = s.startTime;
+            endTime = s.endTime;
+        } else {
+            startTime = nonEmptyTimes.stream().map(s -> s.startTime).min(LocalDateTime::compareTo).get();
+            System.out.println(startTime);
+            endTime = nonEmptyTimes.stream().map(s -> s.endTime).max(LocalDateTime::compareTo).get();
+            System.out.println(endTime);
+        }
     }
 }

@@ -12,13 +12,24 @@ import java.nio.file.Files;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
+    @Override
+    protected FileBackedTaskManager createManger() {
+        File file;
+        try {
+            file = File.createTempFile("/java-kanban/", "temp.csv");
+            return new FileBackedTaskManager(file);
+        } catch (IOException e) {
+            System.out.println("Error occurred while creating a file");
+        }
+        return null;
+    }
 
     @Test
     void loadFromFile() throws IOException {
         // создаю тестовые задания
-        File tempFile = File.createTempFile("/java-kanban/", "temp.csv");
+        final File tempFile = File.createTempFile("/java-kanban/", "temp.csv");
         FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
         Task testTask = new Task("Task 1", "task example");
         testTask.updateStatus(TaskStatus.DONE);
