@@ -106,7 +106,7 @@ public class SubtasksHandler extends BaseHttpHandler {
             manager.deleteAllSubtasks();
             sendResponse(exchange, "all subtasks were deleted", 200);
             return;
-        } else if (path.length == 3){
+        } else if (path.length == 3) {
             int id = parseId(path[2]);
             if (id == -1) {
                 sendResponse(exchange, "Некоректный id", 400);
