@@ -339,15 +339,12 @@ public class InMemoryTaskManager implements TaskManager {
                 e.updateStatus(TaskStatus.NEW);
                 return;
             }
-        
             int tasksDone = subtasks.stream()
                     .filter(s -> s.getStatus() == TaskStatus.DONE)
                     .toList().size();
-        
             int tasksInProgress = subtasks.stream()
                     .filter(s -> s.getStatus() == TaskStatus.IN_PROGRESS)
                     .toList().size();
-        
             if (tasksDone == subtasks.size()) e.updateStatus(TaskStatus.DONE);
             else if (tasksDone > 0 || tasksInProgress > 0) e.updateStatus(TaskStatus.IN_PROGRESS);
             else e.updateStatus(TaskStatus.NEW);
