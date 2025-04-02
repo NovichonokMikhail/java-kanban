@@ -5,10 +5,9 @@ import util.TaskType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Epic extends Task {
-    private final ArrayList<Subtask> subtasks;
+    private final ArrayList<Integer> subtasksIds;
 
     /**
      * Дефолтный конструктор без даты начала
@@ -27,7 +26,11 @@ public class Epic extends Task {
      */
     public Epic(String name, String description, Integer id, Long duration, LocalDateTime startTime) {
         super(name, description, TaskStatus.NEW, id, duration, startTime);
-        subtasks = new ArrayList<>();
+        subtasksIds = new ArrayList<>();
+    }
+
+    public void setEndTime(LocalDateTime dateTime) {
+        this.endTime = dateTime;
     }
 
     /**
@@ -35,42 +38,15 @@ public class Epic extends Task {
      * @param subtask сабтаск для удаления
      */
     public void removeSubtask(Subtask subtask) {
-        if (subtasks.contains(subtask)) {
-            subtasks.remove(subtask);
-            updateStatus();
-            updateStartAndEndTimes();
-            duration.minus(subtask.getDuration());
-        }
+        subtasksIds.remove(subtask.getId());
     }
 
     /**
      * Функция возвращает список сабтасков эпика
      * @return {@code ArrayList<Subtask>} список сабтасков этого эпика
      */
-    public ArrayList<Subtask> getSubtasks() {
-        return subtasks;
-    }
-
-    /**
-     * Функция для обновления статуса эпика
-     */
-    public void updateStatus() {
-        if (subtasks.isEmpty()) {
-            status = TaskStatus.NEW;
-            return;
-        }
-
-        int tasksDone = subtasks.stream()
-                .filter(s -> s.status == TaskStatus.DONE)
-                .toList().size();
-
-        int tasksInProgress = subtasks.stream()
-                .filter(s -> s.status == TaskStatus.IN_PROGRESS)
-                .toList().size();
-
-        if (tasksDone == subtasks.size()) status = TaskStatus.DONE;
-        else if (tasksDone > 0 || tasksInProgress > 0) status = TaskStatus.IN_PROGRESS;
-        else status = TaskStatus.NEW;
+    public ArrayList<Integer> getSubtasksIds() {
+        return subtasksIds;
     }
 
     /**
@@ -78,10 +54,7 @@ public class Epic extends Task {
      * @param subtask сабтаск
      */
     public void addTask(Subtask subtask) {
-        subtasks.add(subtask);
-        updateStatus();
-        duration.plus(subtask.getDuration());
-        updateStartAndEndTimes();
+        subtasksIds.add(subtask.getId());
     }
 
     /**
@@ -99,33 +72,8 @@ public class Epic extends Task {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
-                ", subtasks=" + subtasks.size() +
+                ", subtasksIds=" + subtasksIds +
                 ", status=" + status +
                 '}';
-    }
-
-    @Override
-    public boolean intersectsTask(Task task) {
-        if (task instanceof Subtask) {
-            if (subtasks.contains((Subtask) task)) return false;
-        }
-        return super.intersectsTask(task);
-    }
-
-    private void updateStartAndEndTimes() {
-        List<Subtask> nonEmptyTimes = subtasks.stream().filter(s -> s.startTime != null).toList();
-        if (nonEmptyTimes.isEmpty()) {
-            startTime = null;
-            endTime = null;
-        } else if (nonEmptyTimes.size() == 1) {
-            Subtask s = subtasks.getFirst();
-            startTime = s.startTime;
-            endTime = s.endTime;
-        } else {
-            startTime = nonEmptyTimes.stream().map(s -> s.startTime).min(LocalDateTime::compareTo).get();
-            System.out.println(startTime);
-            endTime = nonEmptyTimes.stream().map(s -> s.endTime).max(LocalDateTime::compareTo).get();
-            System.out.println(endTime);
-        }
     }
 }

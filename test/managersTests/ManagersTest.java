@@ -1,3 +1,5 @@
+package managersTests;
+
 import managers.Managers;
 import org.junit.jupiter.api.Test;
 
