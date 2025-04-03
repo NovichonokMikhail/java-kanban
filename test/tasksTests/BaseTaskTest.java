@@ -50,22 +50,22 @@ public abstract class BaseTaskTest<T extends Task> {
         task = createTestTaskWithStartTime();
 
         Task taskWithNoTime = new Task("Regular task", "reg task with no time");
-        assertFalse(TaskManager.intersectsTask(taskWithNoTime,  taskWithNoTime));
+        assertFalse(manager.intersectsTask(taskWithNoTime,  taskWithNoTime));
 
         Task intersectingTask = new Task("Regular task", "reg intersecting task"
                 , 15L, LocalDateTime.now());
-        assertTrue(TaskManager.intersectsTask(task, intersectingTask));
+        assertTrue(manager.intersectsTask(task, intersectingTask));
 
         Task nonIntersectingTask1 = new Task("Regular task",
                 "reg not-intersecting task with time before actual task"
                 , 15L, LocalDateTime.now().minusMinutes(30));
-        assertFalse(TaskManager.intersectsTask(task, nonIntersectingTask1));
+        assertFalse(manager.intersectsTask(task, nonIntersectingTask1));
 
         Task nonIntersectingTask2 = new Task("Regular task",
                 "reg not-intersecting task with time after actual task"
                 , 15L, LocalDateTime.now().plusMinutes(30));
 
-        assertFalse(TaskManager.intersectsTask(task, nonIntersectingTask2));
+        assertFalse(manager.intersectsTask(task, nonIntersectingTask2));
     }
 
     @Test
@@ -75,7 +75,7 @@ public abstract class BaseTaskTest<T extends Task> {
 
         Epic epicWithNoTime = new Epic("Epic task", "temp task");
         epicWithNoTime.setId(1);
-        assertFalse(TaskManager.intersectsTask(task, epicWithNoTime));
+        assertFalse(manager.intersectsTask(task, epicWithNoTime));
 
         Epic nonIntersectingEpic = new Epic("Regular task", "non-intersecting epic");
         nonIntersectingEpic.setId(12);
@@ -84,7 +84,7 @@ public abstract class BaseTaskTest<T extends Task> {
         manager.createEpic(nonIntersectingEpic);
         manager.createSubtask(nonIntersectingSubtask);
 
-        assertFalse(TaskManager.intersectsTask(task, nonIntersectingEpic));
+        assertFalse(manager.intersectsTask(task, nonIntersectingEpic));
     }
 
     @Test
@@ -94,10 +94,10 @@ public abstract class BaseTaskTest<T extends Task> {
 
         Subtask subtaskWithNoTime = new Subtask("Subtask",
                 "subtask with no time", 0);
-        assertFalse(TaskManager.intersectsTask(subtaskWithNoTime, subtaskWithNoTime));
+        assertFalse(manager.intersectsTask(subtaskWithNoTime, subtaskWithNoTime));
 
         Subtask nonIntersectingSubtask = new Subtask("Regular subtask", "non-intersecting subtask",
                 0, 15L, LocalDateTime.now().minus(Duration.ofMinutes(30)));
-        assertFalse(TaskManager.intersectsTask(task, nonIntersectingSubtask));
+        assertFalse(manager.intersectsTask(task, nonIntersectingSubtask));
     }
 }
