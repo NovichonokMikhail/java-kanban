@@ -291,7 +291,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         tasksPriority.add(epic);
         updateEpicStatus(epic);
-        updateEpicStatus(epic);
     }
 
     /**
@@ -353,7 +352,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected boolean intersectsAnyTask(Task task) {
         return Stream.of(tasks, epics, subtasks)
                 .flatMap(map -> map.values().stream())
-                .anyMatch(t -> TaskManager.intersectsTask(t, task));
+                .anyMatch(t -> this.intersectsTask(t, task));
     }
 
     protected void updateStartAndEndTimes(Epic e) {
@@ -379,5 +378,23 @@ public class InMemoryTaskManager implements TaskManager {
             e.setStartTime(startTime);
             e.setEndTime(endTime);
         }
+    }
+
+    public boolean intersectsTask(Task t1, Task t2) {
+        if (t1 instanceof Epic e && t2 instanceof Subtask s) {
+            if (e.getId() == (s.getRelatedEpicId())) return false;
+
+        } else if (t1 instanceof Subtask s && t2 instanceof Epic e) {
+            if (e.getId() == s.getRelatedEpicId()) return false;
+
+        } else if (t1 instanceof Subtask s1 && t2 instanceof Subtask s2) {
+            if (s1.getRelatedEpicId() == s2.getRelatedEpicId()) return false;
+
+        }
+
+        if (t1.getStartTime() != null && t2.getStartTime() != null)
+            return (t1.getEndTime().isAfter(t2.getStartTime()) && t2.getStartTime().isAfter(t1.getStartTime())) ||
+                    (t2.getEndTime().isAfter(t1.getStartTime()) && t1.getStartTime().isAfter(t2.getStartTime()));
+        return false;
     }
 }

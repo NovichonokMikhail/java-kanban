@@ -44,15 +44,15 @@ public class EpicsHandler extends BaseHttpHandler {
         String[] path = exchange.getRequestURI().getPath().split("/");
         if (path.length == 2) {
             String response;
-            int rCode;
+            int responseCode;
             try {
                 response = gson.toJson(manager.getAllEpics());
-                rCode = 200;
+                responseCode = 200;
             } catch (Exception e) {
                 response = "failed at making a json";
-                rCode = 500;
+                responseCode = 500;
             }
-            sendResponse(exchange, response, rCode);
+            sendResponse(exchange, response, responseCode);
             return;
         } else if (path.length == 3) {
             int id = parseId(path[2]);

@@ -53,21 +53,5 @@ public interface TaskManager {
 
     void createSubtask(Subtask subtask) throws TimeIntervalOccupiedException;
 
-    static boolean intersectsTask(Task t1, Task t2) {
-        if (t1 instanceof Epic e && t2 instanceof Subtask s) {
-            if (e.getId() == (s.getRelatedEpicId())) return false;
-
-        } else if (t1 instanceof Subtask s && t2 instanceof Epic e) {
-            if (e.getId() == s.getRelatedEpicId()) return false;
-
-        } else if (t1 instanceof Subtask s1 && t2 instanceof Subtask s2) {
-            if (s1.getRelatedEpicId() == s2.getRelatedEpicId()) return false;
-
-        }
-
-        if (t1.getStartTime() != null && t2.getStartTime() != null)
-            return (t1.getEndTime().isAfter(t2.getStartTime()) && t2.getStartTime().isAfter(t1.getStartTime())) ||
-                    (t2.getEndTime().isAfter(t1.getStartTime()) && t1.getStartTime().isAfter(t2.getStartTime()));
-        return false;
-    }
+    boolean intersectsTask(Task t1, Task t2);
 }
