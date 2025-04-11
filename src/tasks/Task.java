@@ -8,13 +8,17 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
-    protected final String name;
-    protected final String description;
+    protected String name;
+    protected String description;
     protected Integer id;
     protected TaskStatus status;
     protected LocalDateTime startTime;
     protected LocalDateTime endTime;
     protected Duration duration;
+
+    public Task() {
+        this("", "", TaskStatus.NEW, null, 0L, null);
+    }
 
     /**
      * Дефолтный конструктор без даты и времени
@@ -107,6 +111,23 @@ public class Task {
         return duration;
     }
 
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+        if (startTime != null && duration != null) {
+            endTime = startTime.plus(duration);
+        } else {
+            endTime = null;
+        }
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
     public LocalDateTime getStartTime() {
         return startTime;
     }
@@ -145,13 +166,5 @@ public class Task {
     @Override
     public int hashCode() {
         return id;
-    }
-
-    public boolean intersectsTask(Task task) {
-        if (task.startTime != null && startTime != null) {
-            return (startTime.isAfter(task.startTime) && startTime.isBefore(task.endTime)) ||
-                    (endTime.isAfter(task.startTime));
-        }
-        return false;
     }
 }

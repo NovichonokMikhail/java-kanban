@@ -1,3 +1,5 @@
+package managersTests;
+
 import managers.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -38,9 +40,9 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         Epic testEpic = new Epic("Epic 2", "epic example");
         manager.createEpic(testEpic);
 
-        Subtask testSubtask1 = new Subtask("Subtask 1", "subtask example 1", testEpic);
+        Subtask testSubtask1 = new Subtask("Subtask 1", "subtask example 1", testEpic.getId());
         manager.createSubtask(testSubtask1);
-        Subtask testSubtask2 = new Subtask("Subtask 2", "subtask example 2", testEpic);
+        Subtask testSubtask2 = new Subtask("Subtask 2", "subtask example 2", testEpic.getId());
         testSubtask2.updateStatus(TaskStatus.DONE);
         manager.createSubtask(testSubtask2);
 

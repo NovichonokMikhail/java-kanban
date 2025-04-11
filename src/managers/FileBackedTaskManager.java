@@ -1,6 +1,7 @@
 package managers;
 
 import exceptions.ManagerSaveException;
+import exceptions.TimeIntervalOccupiedException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -52,7 +53,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createTask(Task task) {
+    public void createTask(Task task) throws TimeIntervalOccupiedException {
         super.createTask(task);
         try {
             save();
@@ -62,7 +63,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public void createEpic(Epic epic) throws TimeIntervalOccupiedException {
         super.createEpic(epic);
         try {
             save();
@@ -72,7 +73,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void createSubtask(Subtask subtask) {
+    public void createSubtask(Subtask subtask) throws TimeIntervalOccupiedException {
         super.createSubtask(subtask);
         try {
             save();
@@ -107,7 +108,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
             Subtask subtask = (Subtask) task;
             return String.format(FORMAT, subtask.getId(), subtask.getType(), subtask.getName(),
-                    subtask.getStatus(), subtask.getDescription(), subtask.getRelatedEpic().getId(),
+                    subtask.getStatus(), subtask.getDescription(), subtask.getRelatedEpicId(),
                     subtask.getDuration().toMinutes(), subtask.getStartTime().format(DATE_TIME_FORMATTER));
         }
 
@@ -117,7 +118,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         Subtask subtask = (Subtask) task;
         return String.format(FORMAT, subtask.getId(), subtask.getType(), subtask.getName(),
-                subtask.getStatus(), subtask.getDescription(), subtask.getRelatedEpic().getId(),
+                subtask.getStatus(), subtask.getDescription(), subtask.getRelatedEpicId(),
                 " ", " ");
     }
 
@@ -144,7 +145,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case TASK -> manager.createTask(new Task(name, description, status, id, duration,dateTime));
             case EPIC -> manager.createEpic(new Epic(name, description, id, duration, dateTime));
             case SUBTASK -> manager.createSubtask(new Subtask(name, description, status, id,
-                    manager.getEpic(epicId), duration, dateTime));
+                    epicId, duration, dateTime));
         }
     }
 }
